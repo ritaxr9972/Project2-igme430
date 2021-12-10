@@ -9,42 +9,45 @@ var deleteFavorite = function deleteFavorite(poke) {
 
 var FavoritesList = function FavoritesList(props) {
   if (props.pokes.length === 0) {
-    return /*#__PURE__*/React.createElement("div", {
-      className: "pokeList"
-    }, /*#__PURE__*/React.createElement("h3", {
-      className: "emptyPoke"
-    }, "No Favorites yet"));
+    return (/*#__PURE__*/React.createElement("div", {
+        className: "pokeList"
+      }, /*#__PURE__*/React.createElement("h3", {
+        className: "emptyPoke"
+      }, "No Favorites yet"))
+    );
   }
 
   var favoriteNodes = props.pokes.map(function (poke) {
-    return /*#__PURE__*/React.createElement("form", {
-      id: poke._id,
-      className: "card",
-      onSubmit: function onSubmit(e) {
-        e.preventDefault();
-        deleteFavorite(poke._id);
-      }
-    }, /*#__PURE__*/React.createElement("img", {
-      src: poke.image,
-      alt: "poke image",
-      "class": "card-img-top"
-    }), /*#__PURE__*/React.createElement("div", {
-      "class": "card-body"
-    }, /*#__PURE__*/React.createElement("h3", {
-      className: "pokeName"
-    }, "Name: ", poke.name, " "), /*#__PURE__*/React.createElement("input", {
-      type: "hidden",
-      name: "_csrf",
-      value: token
-    }), /*#__PURE__*/React.createElement("input", {
-      className: "deleteSubmit",
-      type: "submit",
-      value: "Remove Favorite"
-    })));
+    return (/*#__PURE__*/React.createElement("form", {
+        id: poke._id,
+        className: "card",
+        onSubmit: function onSubmit(e) {
+          e.preventDefault();
+          deleteFavorite(poke._id);
+        }
+      }, /*#__PURE__*/React.createElement("img", {
+        src: poke.image,
+        alt: "poke image",
+        "class": "card-img-top"
+      }), /*#__PURE__*/React.createElement("div", {
+        "class": "card-body"
+      }, /*#__PURE__*/React.createElement("h3", {
+        className: "pokeName"
+      }, "Name: ", poke.name, " "), /*#__PURE__*/React.createElement("input", {
+        type: "hidden",
+        name: "_csrf",
+        value: token
+      }), /*#__PURE__*/React.createElement("input", {
+        className: "deleteSubmit",
+        type: "submit",
+        value: "Remove Favorite"
+      })))
+    );
   });
-  return /*#__PURE__*/React.createElement("div", {
-    className: "pokeList"
-  }, /*#__PURE__*/React.createElement("h3", null, "Favorites:"), favoriteNodes);
+  return (/*#__PURE__*/React.createElement("div", {
+      className: "pokeList"
+    }, /*#__PURE__*/React.createElement("h3", null, "Favorites:"), favoriteNodes)
+  );
 };
 
 var loadFavoritesFromServer = function loadFavoritesFromServer() {

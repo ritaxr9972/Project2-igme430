@@ -1,67 +1,72 @@
-const models = require('../models');
+const pokemonCards = require('pokemontcgsdk');
+const fetch = require('node-fetch');
 
-const { Pokemon } = models;
 
-const makerPage = (req, res) => {
-  Pokemon.PokeModel.findByOwner(req.session.account._id, (err, docs) => {
-    if (err) {
-      console.log(err);
-      return res.status(400).json({ error: 'An error occured' });
-    }
-    return res.render('app', { csrfToken: req.csrfToken(), domos: docs });
-  });
-};
+const requestBearerToken = (res) => {
+  const url = 'https://api.tcgplayer.com/token';
 
-const makePokemon = (req, res) => {
-  if (!req.body.name || !req.body.age || !req.body.level) {
-    return res.status(400).json({ error: 'RAWR! All fields are required' });
-  }
-
-  const pokeData = {
-    name: req.body.name,
-    age: req.body.age,
-    level: req.body.level,
-    owner: req.session.account._id,
+  const options = {
+    method: 'POST',
+    headers: {
+      Accept: 'application.json',
+      'Content-Type': 'application/json;charset=UTF-8',
+    },
+    body: 'grant_type=client_credentials&client_id=80f4290e-727a-4b81-b467-0e764bfb6c5d&client_secret=41df591c-f37e-41ad-8863-cb0c581ac230',
   };
 
-  const newPokemon = new Pokemon.PokeModel(pokeData);
-
-  const pokePromise = newPokemon.save();
-
-  pokePromise.then(() => res.json({ redirect: '/maker' }));
-
-  pokePromise.catch((err) => {
-    console.log(err);
-    if (err.code === 11000) {
-      return res.status(400).json({ error: 'Domo already exists.' });
-    }
-
-    return res.status(400).json({ error: 'An error occured' });
-  });
-
-  return pokePromise;
+  fetch(url, options)
+    .then((response) => response.json())
+    .then((json) => function () {
+      // token = json.access_token;
+      res.json({ status: json.status });
+    });
 };
 
-const getPokemons = (request, response) => {
+const getPokemon = (req, res) => {
+  let pokelist = [{}];
+
+  pokemonCards.card.where({ page: 1, pageSize: 20 })
+    .then((cards) => {
+      pokelist = cards;
+      res.json({ pokemon: pokelist });
+    });
+};
+
+const searchCards = (req, res) => {
+  const searchList = [{}];
+  const { numResults } = req.query;
+
+  const term = `name:${req.query.search}`;
+
+  pokemonCards.card.all({ q: term })
+    .then('data',(card) => {
+      if (searchList.length < numResults) {
+        searchList.push(card);
+      }
+    });
+
+  setTimeout(() => {
+    res.json({ pokemon: searchList });
+  }, 4000);
+};
+
+const pokePage = (req, res) => {
+  res.render('pokemon', { csrfToken: req.csrfToken() });
+};
+
+const getToken = (request, response) => {
   const req = request;
   const res = response;
 
-  return Pokemon.PokeModel.findByOwner(req.session.account._id, (err, docs) => {
-    if (err) {
-      console.log(err);
-      return res.status(400).json({ error: 'An error occurred' });
-    }
+  const csrfJSON = {
+    csrfToken: req.csrfToken(),
+  };
 
-    return res.json({ Pokemons: docs });
-  });
+  res.json(csrfJSON);
 };
-/*
-const deleteDomos = (request, response) => {
-  // const req = request;
-  // const res = response;
-};
-*/
-module.exports.makerPage = makerPage;
-module.exports.getPokemons = getPokemons;
-module.exports.make = makePokemon;
-// module.exports.deleteDomos = deleteDomos;
+
+module.exports.getPokemon = getPokemon;
+module.exports.pokePage = pokePage;
+module.exports.getToken = getToken;
+module.exports.searchCards = searchCards;
+module.exports.requestBearerToken = requestBearerToken;

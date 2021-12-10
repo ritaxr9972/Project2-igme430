@@ -6,13 +6,15 @@
     "npm": "6.13.x"
   },
   "description": "A Simple Login Example using Node.js, Mongo and Redis",
-  "main": "./server/app.js",
+  "main": "./server/main.js",
   "scripts": {
     "buildLoginBundle": "babel ./client/login ./client/helper --presets @babel/preset-react --out-file ./hosted/loginBundle.js",
     "buildAppBundle": "babel ./client/app ./client/helper --presets @babel/preset-react --out-file ./hosted/bundle.js",
-    "build": "npm run buildLoginBundle && npm run buildAppBundle",
+    "buildMainBundle": "babel ./client/main ./client/helper --presets @babel/preset-react --out-file ./hosted/mainBundle.js",
+    "build": "npm run buildLoginBundle && npm run buildAppBundle && npm run buildMainBundle",
     "watchLoginBundle": "babel --watch ./client/login ./client/helper --presets @babel/preset-react --out-file ./hosted/bundle.js",
     "watchAppBundle": "babel --watch ./client/app ./client/helper --presets @babel/preset-react --out-file ./hosted/bundle.js",
+    "watchMainBundle": "babel --watch ./client/main ./client/helper --presets @babel/preset-react --out-file ./hosted/mainBundle.js",
     "nodemon": "nodemon --watch ./server ./server/app.js",
     "start": "node ./server/app.js",
     "pretest": "eslint ./server --fix",
@@ -48,6 +50,8 @@
     "express-session": "^1.17.2",
     "helmet": "^4.6.0",
     "mongoose": "^6.0.12",
+    "node-fetch": "^2.6.6",
+    "pokemontcgsdk": "^2.0.0",
     "redis": "^3.1.2",
     "serve-favicon": "^2.5.0",
     "underscore": "^1.13.1"

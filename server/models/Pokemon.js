@@ -16,17 +16,10 @@ const PokeSchema = new mongoose.Schema({
     set: setName,
   },
 
-  age: {
-    type: Number,
-    min: 0,
+  image: {
+    type: String,
     required: true,
-  },
-
-  level: {
-    type: Number,
-    min: 0,
-    max: 100,
-    required: true,
+    trim: true,
   },
 
   owner: {
@@ -43,8 +36,8 @@ const PokeSchema = new mongoose.Schema({
 
 PokeSchema.statics.toAPI = (doc) => ({
   name: doc.name,
-  age: doc.age,
-  level: doc.level,
+  image: doc.image,
+  owner: doc.id,
 });
 
 PokeSchema.statics.findByOwner = (ownerId, callback) => {
@@ -52,7 +45,17 @@ PokeSchema.statics.findByOwner = (ownerId, callback) => {
     owner: convertId(ownerId),
   };
 
-  return PokeModel.find(search).select('name level age').lean().exec(callback);
+  return PokeModel.find(search).select('name image id').lean().exec(callback);
+};
+
+PokeSchema.statics.deleteFavorite = (data, callback) => {
+  console.log(data);
+
+  const search = {
+    owner: convertId(data.owner),
+  };
+
+  return PokeModel.find(search).deleteOne({ _id: data._id }, callback);
 };
 
 PokeModel = mongoose.model('Poke', PokeSchema);

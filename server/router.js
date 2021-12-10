@@ -2,16 +2,23 @@ const controllers = require('./controllers');
 const mid = require('./middleware');
 
 const router = (app) => {
-  app.get('/getDomos', mid.requiresLogin, controllers.Poke.getPokemons);
-  app.get('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
-  app.post('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.login);
-  // app.get('/signup', mid.requiresSecure, mid.requiresLogout, controllers.Account.signupPage);
+  // app.post('/delete', mid.requiresLogin, controllers.Domo.)
   app.get('/getToken', mid.requiresSecure, controllers.Account.getToken);
-  app.post('/signup', mid.requiresSecure, mid.requiresLogout, controllers.Account.signup);
+  app.get('/getFavorites', mid.requiresLogin, controllers.Favorites.getFavorites);
+  app.get('/profile', mid.requiresLogin, controllers.Favorites.profilePage);
+  app.post('/addFavorite', mid.requiresLogin, controllers.Favorites.addFavorite);
+  app.post('/deleteFav', mid.requiresLogin, controllers.Favorites.deleteFavorite);
+  app.get('/getBearer', mid.requiresSecure, controllers.Pokemon.requestBearerToken);
+  app.get('/getPokemon', mid.requiresSecure, controllers.Pokemon.getPokemon);
+  app.get('/loggedIn', mid.requiresSecure, controllers.Account.checkLoggedIn);
+  app.get('/pokePage', mid.requiresSecure, controllers.Pokemon.pokePage);
+  app.get('/searchCards', mid.requiresSecure, controllers.Pokemon.searchCards);
+  app.get('/login', mid.requiresSecure, controllers.Account.loginPage);
+  app.post('/login', mid.requiresSecure, controllers.Account.login);
+  app.post('/signup', mid.requiresSecure, controllers.Account.signup);
   app.get('/logout', mid.requiresLogin, controllers.Account.logout);
-  app.get('/maker', mid.requiresLogin, controllers.Poke.makerPage);
-  app.post('/maker', mid.requiresLogin, controllers.Poke.make);
-  app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
+  app.get('/changePass', mid.requiresLogin, controllers.Account.changePassPage);
+  app.get('/', mid.requiresSecure, controllers.Pokemon.pokePage);
 };
 
 module.exports = router;

@@ -11,16 +11,14 @@
   <link rel="shortcut icon" href="/assets/img/favicon.png"/>
   <link rel="stylesheet" type="text/css" href="/assets/style.css"/>
 </head>
-<body>
-  <nav><a href="/pokePage"><img id="logo" src="/assets/img/favicon.png" alt="pokelogo"/></a>
-    <div class="navlink"><a href="/logout">Log out</a></div>
-    <div class="navlink"><a href="/changePass">Change Password</a></div>
+<body> 
+  <nav><a href="/pokePage"><img id="logo" src="/assets/img/Pokeball.png" alt="face logo"/></a>
+    <div class="navlink"><a id="loginButton" href="/profile">Profile</a></div>
   </nav>
-  <section id="favorites">
-  </section>
+  <section id="content"></section>
   <div id="pokeMessage">
-    <h3><span id="errorMessage"></span></h3><img id="poke" src="assets/img/Pokeball.png" alt="poke"/>
+    <h3><span id="errorMessage">Passwords do not match</span></h3><img id="pokeball" src="assets/img/Pokeball.png" alt="ball"/>
   </div>
-  <script src="/assets/appBundle.js"></script>
+  <script src="/assets/loginBundle.js"></script>
 </body>
 </html>

@@ -3,24 +3,22 @@ const models = require('../models');
 const { Account } = models;
 
 const loginPage = (req, res) => {
+  console.log('Going to login page');
   res.render('login', { csrfToken: req.csrfToken() });
 };
 
-// const signupPage = (req, res) => {
-//  res.render('signup', { csrfToken: req.csrfToken() });
-// };
+const changePassPage = (req, res) => {
+  res.render('changepass', { csrfToken: req.csrfToken() });
+};
 
-// replaced by the following
+const checkLoggedIn = (req, res) => {
+  console.log(req.session.account);
 
-const getToken = (request, response) => {
-  const req = request;
-  const res = response;
+  if (req.session.account) {
+    return res.json({ loggedIn: 1 });
+  }
 
-  const csrfJSON = {
-    csrfToken: req.csrfToken(),
-  };
-
-  res.json(csrfJSON);
+  return res.json({ loggedIn: 0 });
 };
 
 const logout = (req, res) => {
@@ -36,7 +34,7 @@ const login = (request, response) => {
   const password = `${req.body.pass}`;
 
   if (!username || !password) {
-    return res.status(400).json({ error: 'RAWR! All fields are required!' });
+    return res.status(400).json({ error: 'All fields are required!' });
   }
 
   return Account.AccountModel.authenticate(username, password, (err, account) => {
@@ -46,7 +44,7 @@ const login = (request, response) => {
 
     req.session.account = Account.AccountModel.toAPI(account);
 
-    return res.json({ redirect: '/maker' });
+    return res.json({ redirect: '/pokePage' });
   });
 };
 
@@ -79,7 +77,7 @@ const signup = (request, response) => {
 
     savePromise.then(() => {
       req.session.account = Account.AccountModel.toAPI(newAccount);
-      return res.json({ redirect: '/maker' });
+      return res.json({ loggedIn: 'true', redirect: '/pokePage' });
     });
 
     savePromise.catch((err) => {
@@ -94,9 +92,21 @@ const signup = (request, response) => {
   });
 };
 
+const getToken = (request, response) => {
+  const req = request;
+  const res = response;
+
+  const csrfJSON = {
+    csrfToken: req.csrfToken(),
+  };
+
+  res.json(csrfJSON);
+};
+
 module.exports.loginPage = loginPage;
+module.exports.changePassPage = changePassPage;
 module.exports.login = login;
 module.exports.logout = logout;
-// module.exports.signupPage = signupPage;
-module.exports.getToken = getToken;
 module.exports.signup = signup;
+module.exports.checkLoggedIn = checkLoggedIn;
+module.exports.getToken = getToken;
